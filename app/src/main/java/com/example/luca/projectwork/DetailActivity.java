@@ -1,5 +1,6 @@
 package com.example.luca.projectwork;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,12 +18,16 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
     RecyclerView recyclerView;
     Dati dati;
     RecyclerAdapterDETTAGLI adapter;
+    ProgressDialog pg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        pg = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+        pg.setMessage("Caricamento dati...");
+        pg.show();
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -68,6 +73,7 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
 
     @Override
     public void notifyDetails(boolean success, JSONObject data) {
+        pg.cancel();
         showRecycleView(data);
         try {
             Log.d("RISPOSTA DETTAGLI", "" + success + ", " + data.getJSONObject("data").getString("name"));

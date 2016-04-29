@@ -8,9 +8,10 @@ import org.json.JSONObject;
 public class Singleton {
     private static Singleton ourInstance = new Singleton();
 
-    static String SESSION;
-    static String GUID_PRODUCT;
-    static JSONObject LISTA_NEGOZI;
+    static String SESSION = null;
+    static String GUID_PRODUCT = null;
+    static JSONObject LISTA_NEGOZI = null;
+    static JSONObject LOGIN_RESPONSE = null;
 
     public static Singleton getInstance() {
         return ourInstance;

@@ -59,12 +59,15 @@ public class RecyclerAdapterLISTA extends  RecyclerView.Adapter<RecyclerViewHold
         holder.telefono.setText(mappa.get(position).get(2));
         holder.titolo.setOnClickListener(clickListener);
         holder.titolo.setTag(holder);
+        holder.indirizzo.setOnClickListener(clickListener);
+        holder.indirizzo.setTag(holder);
+        holder.telefono.setOnClickListener(clickListener);
+        holder.telefono.setTag(holder);
     }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             RecyclerViewHolderLISTA vholder = (RecyclerViewHolderLISTA) v.getTag();
             int position = vholder.getPosition();
             try {
@@ -72,9 +75,6 @@ public class RecyclerAdapterLISTA extends  RecyclerView.Adapter<RecyclerViewHold
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            Toast.makeText(context, "This is posizione " + position, Toast.LENGTH_LONG).show();
-
         }
     };
 
