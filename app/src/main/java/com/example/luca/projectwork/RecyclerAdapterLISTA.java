@@ -2,6 +2,7 @@ package com.example.luca.projectwork;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,7 +54,7 @@ public class RecyclerAdapterLISTA extends  RecyclerView.Adapter<RecyclerViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolderLISTA holder, int position) {
+    public void onBindViewHolder(RecyclerViewHolderLISTA holder, final int position) {
         holder.titolo.setText(mappa.get(position).get(0));
         holder.indirizzo.setText(mappa.get(position).get(1));
         holder.telefono.setText(mappa.get(position).get(2));
@@ -61,7 +62,14 @@ public class RecyclerAdapterLISTA extends  RecyclerView.Adapter<RecyclerViewHold
         holder.titolo.setTag(holder);
         holder.indirizzo.setOnClickListener(clickListener);
         holder.indirizzo.setTag(holder);
-        holder.telefono.setOnClickListener(clickListener);
+        holder.telefono.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + mappa.get(position).get(2)));
+                context.startActivity(intent);
+            }
+        });
         holder.telefono.setTag(holder);
     }
 
@@ -77,6 +85,8 @@ public class RecyclerAdapterLISTA extends  RecyclerView.Adapter<RecyclerViewHold
             }
         }
     };
+
+
 
     private void openDetails(int position) throws JSONException {
         String guid = getID(mappa.get(position).get(0));

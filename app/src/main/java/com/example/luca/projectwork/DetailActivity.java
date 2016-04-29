@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,7 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         Dati.getInstance().setListener(this);
         dati = Dati.getInstance();
 
@@ -43,17 +45,6 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
         dati.richiestaDettagli(vBundle.getString("ID"));
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     private void showRecycleView(JSONObject obj){
@@ -73,12 +64,10 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
 
     @Override
     public void notifyDetails(boolean success, JSONObject data) {
-        pg.cancel();
-        showRecycleView(data);
-        try {
-            Log.d("RISPOSTA DETTAGLI", "" + success + ", " + data.getJSONObject("data").getString("name"));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (success){
+            pg.cancel();
+            showRecycleView(data);
         }
+
     }
 }

@@ -38,15 +38,21 @@ public class ListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setTitle("Lista Negozi");
+
         pg = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
         pg.setMessage("Caricamento dati...");
         pg.show();
 
-        try {
-            Snackbar.make(findViewById(android.R.id.content), "Benvenuto " + Singleton.LOGIN_RESPONSE.getJSONObject("data").getString("name"), Snackbar.LENGTH_LONG).show();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (Singleton.welcome){
+            try {
+                Snackbar.make(findViewById(android.R.id.content), "Benvenuto " + Singleton.LOGIN_RESPONSE.getJSONObject("data").getString("name"), Snackbar.LENGTH_LONG).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Singleton.welcome = false;
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -96,10 +102,10 @@ public class ListActivity extends AppCompatActivity
         if (id == R.id.nav_maps) {
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            Singleton.logout();
+            Intent i = new Intent(ListActivity.this, LoginActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -127,9 +133,11 @@ public class ListActivity extends AppCompatActivity
 
     @Override
     public void notifyShopsData(boolean success, JSONObject data) {
-        pg.cancel();
-        listaNegozi = data;
-        showList(data);
+        if (success){
+            pg.cancel();
+            listaNegozi = data;
+            showList(data);
+        }
     }
 
     @Override

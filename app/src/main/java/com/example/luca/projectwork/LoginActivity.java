@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,6 +34,9 @@ public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        setTitle("Jesse");
+
 
         Dati.getInstance().setListener(this);
         dati = Dati.getInstance();
@@ -81,6 +85,8 @@ public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
             } else {
                 Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
             }
+        } else {
+            Snackbar.make(findViewById(android.R.id.content), "Errore del Server", Snackbar.LENGTH_LONG).show();
         }
     }
 

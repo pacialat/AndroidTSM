@@ -17,7 +17,7 @@ public class RecyclerViewHolderDETTAGLI extends RecyclerView.ViewHolder {
 
         tv1= (TextView) itemView.findViewById(R.id.list_title);
         tv2= (TextView) itemView.findViewById(R.id.list_desc);
-        imageView= (ImageView) itemView.findViewById(R.id.list_avatar);
+
 
     }
 }

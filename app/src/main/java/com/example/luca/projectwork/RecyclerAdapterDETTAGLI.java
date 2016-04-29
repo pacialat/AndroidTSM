@@ -1,6 +1,8 @@
 package com.example.luca.projectwork;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,18 +49,11 @@ public class RecyclerAdapterDETTAGLI extends  RecyclerView.Adapter<RecyclerViewH
 
         holder.tv1.setText(listaDescrizioni.get(position));
         holder.tv2.setText(name.get(position));
-        holder.imageView.setOnClickListener(clickListener);
-        holder.imageView.setTag(holder);
     }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            RecyclerViewHolderDETTAGLI vholder = (RecyclerViewHolderDETTAGLI) v.getTag();
-            int position = vholder.getPosition();
-
-            Toast.makeText(context,"This is position "+position,Toast.LENGTH_LONG ).show();
 
         }
     };
@@ -73,7 +68,8 @@ public class RecyclerAdapterDETTAGLI extends  RecyclerView.Adapter<RecyclerViewH
         listaDescrizioni.add("Descrizione");
         listaDescrizioni.add("Indirizzo");
         listaDescrizioni.add("Telefono");
-        //listaDescrizioni.add("Telefono");
+        listaDescrizioni.add("Venditore");
+        listaDescrizioni.add("Data apertura");
 
     }
 
@@ -87,5 +83,9 @@ public class RecyclerAdapterDETTAGLI extends  RecyclerView.Adapter<RecyclerViewH
         name.put(i, data.getJSONObject("data").getString("address"));
         i += 1;
         name.put(i, data.getJSONObject("data").getString("phone"));
+        i += 1;
+        name.put(i, data.getJSONObject("data").getJSONObject("sales_person").getString("first") + " " + data.getJSONObject("data").getJSONObject("sales_person").getString("last"));
+        i += 1;
+        name.put(i, data.getJSONObject("data").getString("open_date"));
     }
 }

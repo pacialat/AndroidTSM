@@ -3,60 +3,46 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="2dp"
-    android:layout_marginRight="2dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:background="#C5CAE9"
     android:foreground="?attr/selectableItemBackground"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">+
     <RelativeLayout
         android:layout_width="match_parent"
         android:gravity="center"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:elevation="5dp">
 
-        <ImageView
-            android:id="@+id/list_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:scaleType="centerCrop"
-            />
-
-        <TextView
-            android:id="@+id/list_title"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Titolo"
-            android:textColor="#000000"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:elegantTextHeight="false"
+            android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/list_desc" />
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp">
 
-        <TextView
-            android:id="@+id/list_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/list_title"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/list_avatar"
-            android:textColor="#000000"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Descrizione"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="16sp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="5dp"
-            android:minLines="1"
-            android:inputType="textMultiLine"
-            android:maxLines="10" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/list_title"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="#b18557" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/list_desc"
+                android:textSize="16dp"
+                android:textColor="#000000" />
+        </LinearLayout>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
