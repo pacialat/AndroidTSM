@@ -1,28 +1,17 @@
 package com.example.luca.projectwork;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.loopj.android.http.*;
-import cz.msebera.android.httpclient.Header;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -155,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void notifyShopsData(boolean success, JSONObject data) {
+    public void notifyShopsData(boolean success, boolean successData, JSONObject data) {
         /*Singleton.LISTA_NEGOZI = data;
         try {
             setMarker(mMap);
@@ -166,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void notifyDetails(boolean success, JSONObject data) {
+    public void notifyDetails(boolean success, boolean successData, JSONObject data) {
         //non usato in questa classe
     }
 }

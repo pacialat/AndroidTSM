@@ -1,7 +1,6 @@
 package com.example.luca.projectwork;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,18 +8,14 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
 
 
 public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
@@ -31,17 +26,26 @@ public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
     ProgressDialog pg;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //finish();
+        username.setText("");
+        moveTaskToBack(true);
+        System.exit(0);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         setTitle("Jesse");
 
-
         Dati.getInstance().setListener(this);
         dati = Dati.getInstance();
 
         username = (EditText)findViewById(R.id.username);
+        username.setText("");
         password = (EditText)findViewById(R.id.password);
 
         pg = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
@@ -54,6 +58,8 @@ public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
             @Override
             public void onClick(View v) {
                 pg.show();
+                String user  = "" + username.getText();
+                String userNoSpace = user.replaceAll("\\s", "");
 
                 pw = "" + password.getText();
 
@@ -66,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
                 md.update(pw.getBytes());
                 byte byteData[] = md.digest();
                 String base64 = Base64.encodeToString(byteData, Base64.NO_WRAP);
-                dati.richiestaLogin("" + username.getText(), base64, getApplicationContext());
+                dati.richiestaLogin("" + userNoSpace, base64, getApplicationContext());
                 Log.d("PASSWORD SHA", base64);
                 //valori = "email="+email+"&password="+base64;
             }
@@ -91,12 +97,12 @@ public class LoginActivity extends AppCompatActivity implements Dati.MyResponse{
     }
 
     @Override
-    public void notifyShopsData(boolean success, JSONObject data) {
+    public void notifyShopsData(boolean success, boolean successData, JSONObject data) {
 
     }
 
     @Override
-    public void notifyDetails(boolean success, JSONObject data) {
+    public void notifyDetails(boolean success, boolean successData, JSONObject data) {
 
     }
 }

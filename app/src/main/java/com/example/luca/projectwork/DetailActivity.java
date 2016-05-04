@@ -2,17 +2,12 @@ package com.example.luca.projectwork;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DetailActivity extends AppCompatActivity implements Dati.MyResponse{
@@ -26,23 +21,28 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        pg = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-        pg.setMessage("Caricamento dati...");
-        pg.show();
+        if(Singleton.SESSION != null){
+            pg = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+            pg.setMessage("Caricamento dati...");
+            pg.show();
 
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
 
-        Dati.getInstance().setListener(this);
-        dati = Dati.getInstance();
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Bundle vBundle = getIntent().getExtras();
-        Singleton.GUID_PRODUCT = vBundle.getString("ID");
-        dati.richiestaDettagli(vBundle.getString("ID"));
+
+            Dati.getInstance().setListener(this);
+            dati = Dati.getInstance();
+
+            Bundle vBundle = getIntent().getExtras();
+            Singleton.GUID_PRODUCT = vBundle.getString("ID");
+            dati.richiestaDettagli(vBundle.getString("ID"), getApplicationContext());
+        } else{
+            Log.d("FINISH DETAIL", "finish detail");
+            finish();
+        }
 
 
     }
@@ -58,15 +58,21 @@ public class DetailActivity extends AppCompatActivity implements Dati.MyResponse
     }
 
     @Override
-    public void notifyShopsData(boolean success, JSONObject data) {
+    public void notifyShopsData(boolean success, boolean successData, JSONObject data) {
         //non usata in questa classe
     }
 
     @Override
-    public void notifyDetails(boolean success, JSONObject data) {
+    public void notifyDetails(boolean success, boolean successData, JSONObject data) {
+        pg.cancel();
         if (success){
-            pg.cancel();
-            showRecycleView(data);
+            if (successData){
+                showRecycleView(data);
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), "Errore nel caricamento dei dati", Snackbar.LENGTH_LONG).show();
+            }
+        }else{
+            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
         }
 
     }

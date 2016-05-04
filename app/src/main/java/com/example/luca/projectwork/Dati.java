@@ -3,8 +3,9 @@ package com.example.luca.projectwork;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -23,8 +24,8 @@ public class Dati {
     //interfaccia per notificare la risposta
     public interface MyResponse{
         public void notifyLogin(boolean success, boolean successData, String message) throws JSONException;
-        public void  notifyShopsData(boolean success, JSONObject data);
-        public void  notifyDetails(boolean success, JSONObject data);
+        public void  notifyShopsData(boolean success, boolean successData, JSONObject data);
+        public void  notifyDetails(boolean success, boolean successData, JSONObject data);
     }
 
     private static Dati mInstance;
@@ -42,18 +43,17 @@ public class Dati {
         mListener = listener;
     }
 
-
+    //controllo connessione internet
+    private boolean isConnected(Context c){
+        ConnectivityManager cm = (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
 
     //fa la richiesta per il login
     public void richiestaLogin(String utente, String password, Context c){
-        //controllo connessione internet
-        ConnectivityManager cm =
-                (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        if (isConnected){
+        if (isConnected(c)){
             RequestParams params = new RequestParams();
             params.add("email", utente);
             params.add("password", password);
@@ -99,59 +99,80 @@ public class Dati {
     }
 
     // fa la richiesta per ricevere la lista dei negozi
-    public void richiestaListaNegozi(){
-        RequestParams params = new RequestParams();
+    public void richiestaListaNegozi(Context c){
 
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("x-bitrace-session", Singleton.SESSION);
-        asyncHttpClient.get("http://its-bitrace.herokuapp.com/api/v2/stores", params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        if (isConnected(c)){
+            RequestParams params = new RequestParams();
 
-                try {
-                    JSONObject response = new JSONObject(new String(responseBody));
-                    Singleton.LISTA_NEGOZI = response;
-                    mListener.notifyShopsData(true, response);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+            asyncHttpClient.addHeader("x-bitrace-session", Singleton.SESSION);
+            asyncHttpClient.get("http://its-bitrace.herokuapp.com/api/v2/stores", params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    try {
+                        JSONObject response = new JSONObject(new String(responseBody));
+                        Singleton.LISTA_NEGOZI = response;
+                        if (response.getBoolean("success")){
+                            mListener.notifyShopsData(true, response.getBoolean("success"), response);
+                        }else{
+                            mListener.notifyShopsData(true, response.getBoolean("success"), null);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d("FAIL", "FAILURE");
-                mListener.notifyShopsData(false, null);
-                error.printStackTrace();
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.d("FAIL", "FAILURE");
+                    mListener.notifyShopsData(false, false, null);
+                    error.printStackTrace();
 
-            }
-        });
+                }
+            });
+        } else {
+            mListener.notifyShopsData(false, false, null);
+
+        }
+
     }
 
     //fa la richiesta per ricevere i dettagli di un negozio
-    public void richiestaDettagli(String GUID){
-        RequestParams params = new RequestParams();
+    public void richiestaDettagli(String GUID, Context c){
+        if (isConnected(c)){
+            RequestParams params = new RequestParams();
 
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("x-bitrace-session", Singleton.SESSION);
-        asyncHttpClient.get("http://its-bitrace.herokuapp.com/api/v2/stores/" + GUID, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                try {
-                    JSONObject response = new JSONObject(new String(responseBody));
-                    mListener.notifyDetails(true, response);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+            asyncHttpClient.addHeader("x-bitrace-session", Singleton.SESSION);
+            asyncHttpClient.get("http://its-bitrace.herokuapp.com/api/v2/stores/" + GUID, params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        JSONObject response = new JSONObject(new String(responseBody));
+                        if (response.getBoolean("success")){
+                            mListener.notifyDetails(true, response.getBoolean("success"), response);
+                        }else{
+                            mListener.notifyDetails(true, response.getBoolean("success"), null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d("FAIL", "FAILURE");
-                mListener.notifyDetails(false, null);
-                error.printStackTrace();
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.d("FAIL", "FAILURE");
+                    mListener.notifyDetails(false, false, null);
+                    error.printStackTrace();
 
-            }
-        });
+                }
+            });
+        } else {
+                mListener.notifyDetails(false, false, null);
+
+        }
+
     }
 
 
